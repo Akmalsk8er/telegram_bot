@@ -1,19 +1,23 @@
 import telebot
 bot = telebot.TeleBot('1636619058:AAFmFhullbR6HViijiOL8G12A7sxO-BclN4')
 keyboard1 = telebot.types.ReplyKeyboardMarkup()
-keyboard.row('Привет', 'Пока')
+keyboard1.row('Привет', 'Пока')
 
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, f'Я бот. Приятно познакомиться, {message.from_user.first_name}', reply_markup=keyboard1)
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    bot.send_message(message.chat.id, 'Привет, ты написал мне /start', reply_markup=keyboard1)
 
 @bot.message_handler(content_types=['text'])
-def get_text_messages(message):
+def send_text(message):
     if message.text.lower() == 'привет':
-        bot.send_message(message.from_user.id, 'Салют, мой создатель!!')
+        bot.send_message(message.chat.id, 'Привет, мой создатель')
     elif message.text.lower() == 'пока':
-        bot.send_message(message.from_user.id, 'Пока, мой создатель!')
-    else:
-        bot.send_message(message.from_user.id, 'Не понимаю что это значит.')
+        bot.send_message(message.chat.id, 'Прощай, создатель')
+    elif message.text.lower() == 'я тебя люблю':
+        bot.send_sticker(message.chat.id, 'CAADAgADZgkAAnlc4gmfCor5YbYYRAI')
 
-bot.polling(none_stop=True)
+@bot.message_handler(content_types=['sticker'])
+def sticker_id(message):
+    print(message)
+
+bot.polling()
